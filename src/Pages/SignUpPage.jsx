@@ -1,117 +1,105 @@
-import React, { useState } from "react";
+// src/pages/SignupPage.jsx
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/Ulwembu connect logo.jpeg";
+import logo from "../assets/ulwembu connect logo.jpeg"; // <-- replace with your logo path
 
 const SignupPage = () => {
   const navigate = useNavigate();
 
-  // ✅ State to handle form inputs
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-
-  // ✅ Handle input changes
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  // ✅ Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("User Data:", formData);
-    // Navigate to verify page
     navigate("/verify");
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      {/* Logo */}
-      <img
-        src={logo}
-        alt="Logo"
-        className="w-24 h-24 mb-6 rounded-full shadow-md"
-      />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#00B0F0] to-[#00D18C] px-4">
+      <div className="bg-white w-full max-w-sm rounded-3xl shadow-xl overflow-hidden">
+        {/* Logo and Header */}
+        <div className="p-6 text-center">
+          <div className="w-20 h-20 mx-auto bg-white rounded-full shadow-md flex items-center justify-center mb-2">
+            <img
+              src={logo}
+              alt="ULWEMBU CONNECT Logo"
+              className="w-16 h-16 object-contain"
+            />
+          </div>
+          <h2 className="text-xl font-semibold text-[#00B0F0]">
+            Create new Account
+          </h2>
+        </div>
 
-      {/* Card */}
-      <div className="bg-white shadow-lg rounded-2xl w-full max-w-md p-8">
-        <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">
-          Sign Up
-        </h1>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Name */}
+        {/* Signup Form */}
+        <form onSubmit={handleSubmit} className="px-6 pb-6 space-y-4">
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Full Name
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              NAME
             </label>
             <input
-              type="text"
+              id="name"
               name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your name"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              type="text"
               required
+              placeholder="Jiana Martina"
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00D18C]"
             />
           </div>
 
-          {/* Email */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Email Address
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              EMAIL
             </label>
             <input
-              type="email"
+              id="email"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              type="email"
               required
+              placeholder="hello@reallygreatsite.com"
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00D18C]"
             />
           </div>
 
-          {/* Password */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Password
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              PASSWORD
             </label>
             <input
-              type="password"
+              id="password"
               name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Create a password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              type="password"
               required
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00D18C]"
             />
           </div>
 
-          {/* Submit */}
+          <div>
+            <label htmlFor="dob" className="block text-sm font-medium text-gray-700">
+              DATE OF BIRTH
+            </label>
+            <select
+              id="dob"
+              name="dob"
+              required
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-[#00D18C]"
+            >
+              <option value="">Select</option>
+              <option value="2000-01-01">January 1, 2000</option>
+              <option value="2001-01-01">January 1, 2001</option>
+            </select>
+          </div>
+
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-all duration-200"
+            className="w-full py-2 bg-[#00D18C] text-white rounded-md text-sm font-semibold hover:bg-[#00B070] transition"
           >
-            Sign Up
+            Sign up
           </button>
-        </form>
 
-        {/* Login link */}
-        <p className="text-center text-gray-600 mt-4">
-          Already have an account?{" "}
-          <span
-            onClick={() => navigate("/login")}
-            className="text-blue-600 font-medium hover:underline cursor-pointer"
-          >
-            Login
-          </span>
-        </p>
+          <p className="text-center text-sm text-gray-600">
+            Already Registered?{" "}
+            <a href="/login" className="text-[#00B0F0] hover:underline">
+              Log in now.
+            </a>
+          </p>
+        </form>
       </div>
     </div>
   );
