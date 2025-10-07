@@ -1,37 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const VerifyPage = () => {
-    const [code, setCode] = useState('');
-    const [message, setMessage] = useState('');
+  const [code, setCode] = useState("");
 
-    const handleVerify = (e) => {
-        e.preventDefault();
-        // Simulate verification logic
-        if (code === '123456') {
-            setMessage('Verification successful!');
-        } else {
-            setMessage('Invalid code. Please try again.');
-        }
-    };
+  const handleVerify = (e) => {
+    e.preventDefault();
+    alert(`Verification code "${code}" submitted!`);
+  };
 
-    return (
-        <div style={{ maxWidth: 400, margin: '40px auto', padding: 24, border: '1px solid #ddd', borderRadius: 8 }}>
-            <h2>Verify Your Account</h2>
-            <form onSubmit={handleVerify}>
-                <label htmlFor="code">Enter Verification Code:</label>
-                <input
-                    id="code"
-                    type="text"
-                    value={code}
-                    onChange={e => setCode(e.target.value)}
-                    style={{ width: '100%', padding: 8, margin: '12px 0' }}
-                    required
-                />
-                <button type="submit" style={{ padding: '8px 16px' }}>Verify</button>
-            </form>
-            {message && <p style={{ marginTop: 16 }}>{message}</p>}
-        </div>
-    );
+  return (
+    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow">
+      <h2 className="text-2xl font-bold text-center mb-4">Verify Account</h2>
+      <form onSubmit={handleVerify} className="flex flex-col gap-4">
+        <input
+          type="text"
+          placeholder="Enter verification code"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          className="border p-2 rounded"
+        />
+        <button type="submit" className="bg-purple-600 text-white py-2 rounded">
+          Verify
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default VerifyPage;
