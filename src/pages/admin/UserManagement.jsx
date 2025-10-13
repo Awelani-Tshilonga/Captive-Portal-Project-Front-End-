@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Users } from 'lucide-react';
 
 const UserManagement = () => {
   // user data
@@ -21,102 +22,16 @@ const UserManagement = () => {
   );
 
   return (
-    <div className="min-h-screen flex bg-white">
-      {/* Sidebar */}
-      <aside className="w-20 bg-teal-600 text-white flex flex-col items-center py-8 space-y-6">
-        {/* Logo */}
-        <div className="w-12 h-12 rounded-full bg-white p-1 flex items-center justify-center">
-          <div className="w-full h-full rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-teal-900 font-bold">
-            UL
-          </div>
-        </div>
-
-        {/* Nav icons */}
-        <nav className="flex flex-col items-center space-y-6 mt-6">
-          <button className="p-2 rounded hover:bg-teal-500/20">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="w-6 h-6"
-            >
-              <path
-                d="M3 11.5L12 4l9 7.5M5 21V11h14v10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-          <button className="p-2 rounded hover:bg-teal-500/20">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="w-6 h-6"
-            >
-              <path
-                d="M17 21v-2a4 4 0 0 0-3-3.87M9 21v-2a4 4 0 0 1 3-3.87M12 7a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-          <button className="p-2 rounded hover:bg-teal-500/20">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="w-6 h-6"
-            >
-              <path
-                d="M12 2l8 4v6c0 5-3.58 9.74-8 11-4.42-1.26-8-6-8-11V6l8-4z"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-          <button className="p-2 rounded hover:bg-teal-500/20">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="w-6 h-6"
-            >
-              <path
-                d="M3 3v18h18M7 13V7m5 10V7m5 2V7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        </nav>
-
-        <div className="flex-1" />
-        <div className="text-xs opacity-80">v1.0</div>
-      </aside>
-
+    <div className="min-h-screen flex">
       {/* Main Content */}
-      <main className="flex-1 p-10">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-gray-700">User Management</h1>
-          <button className="text-sm text-gray-500 hover:text-teal-600">
-            Sign Out
-          </button>
-        </div>
-
-        <div className="my-4 h-1 bg-gray-100 rounded"></div>
+      <main className="flex-1 p-10 mt-0">
 
         {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <Card title="Total Users" value="15,847" text="+12% this month" />
-          <Card title="Online Users" value="892" text="Currently online" />
-          <Card title="New Registrations" value="34" text="This week" />
-          <Card title="Blocked Users" value="15" text="Security violations" />
+          <Card title="Total Users" value="15,847" text="+12% this month" icon />
+          <Card title="Online Users" value="892" text="Currently online" icon />
+          <Card title="New Registrations" value="34" text="This week" icon /> {/* Icon aligned */}
+          <Card title="Blocked Users" value="15" text="Security violations" icon />
         </div>
 
         {/* Table */}
@@ -181,12 +96,22 @@ const UserManagement = () => {
 };
 
 /* -------------------- Card Component -------------------- */
-const Card = ({ title, value, text }) => (
+const Card = ({ title, value, text, icon }) => (
   <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-    <div className="flex flex-col">
-      <span className="text-sm text-gray-500">{title}</span>
-      <span className="text-xl font-semibold text-teal-600 mt-1">{value}</span>
-      <span className="text-xs text-green-500 mt-1">{text}</span>
+    <div className="flex items-center justify-between">
+      {/* Text content */}
+      <div className="flex flex-col">
+        <span className="text-sm text-gray-500">{title}</span>
+        <span className="text-xl font-semibold text-teal-600 mt-1">{value}</span>
+        <span className="text-xs text-green-500 mt-1">{text}</span>
+      </div>
+
+      {/* Icon content */}
+      {icon && (
+        <div className="flex-shrink-0 ml-4 p-2 bg-teal-50 rounded-full flex items-center justify-center">
+          <Users className="w-6 h-6 text-teal-600" />
+        </div>
+      )}
     </div>
   </div>
 );
