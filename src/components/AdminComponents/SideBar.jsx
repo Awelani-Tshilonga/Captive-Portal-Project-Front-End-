@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { Home, Users, Shield, BarChart2, Bell, FileText } from "lucide-react";
 import Logo from "../../assets/Logo.jpeg";
 
@@ -12,8 +12,16 @@ const navItems = [
 ];
 
 export default function SideBar() {
+  const location = useLocation();
+
+  const isActive = (path) => {
+    // Exact match for Home, partial match for others
+    if (path === "/admin") return location.pathname === "/admin";
+    return location.pathname.startsWith(path);
+  };
+
   return (
-    <div className="h-screen w-[80px] bg-[#0E9CD9] flex flex-col items-center py-6 rounded-r-[30px] shadow-lg">
+    <div className="h-screen w-[80px] bg-[#0E9CD9] flex flex-col items-center py-6 rounded-r-[30px] shadow-lg sticky top-0">
       {/* Logo */}
       <div className="mb-10">
         <img
@@ -25,29 +33,26 @@ export default function SideBar() {
 
       {/* Navigation */}
       <div className="flex flex-col items-center space-y-8 text-white mt-10">
-{navItems.map((item) => {
-  const Icon = item.icon;
-  return (
-    <NavLink
-      key={item.label}
-      to={item.path}
-      className={({ isActive }) =>
-        `relative group flex items-center justify-center w-10 h-10 rounded-2xl transition-all duration-300 
-        ${
-          isActive
-            ? "bg-white text-[#0E9CD9] shadow-md scale-110"
-            : "text-white hover:text-gray-200 hover:scale-110"
-        }`
-      }
-    >
-      <Icon className="w-6 h-6" /> {/* ✅ ESLint now recognizes usage */}
-      <span className="absolute left-14 opacity-0 group-hover:opacity-100 bg-white text-[#0E9CD9] text-sm font-medium rounded-md px-2 py-1 shadow-md transition-all duration-300 whitespace-nowrap">
-        {item.label}
-      </span>
-    </NavLink>
-  );
-})}
-
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <NavLink
+              key={item.label}
+              to={item.path}
+              className={`relative group flex items-center justify-center w-10 h-10 rounded-2xl transition-all duration-300 
+                ${
+                  isActive(item.path)
+                    ? "bg-white text-[#0E9CD9] shadow-md scale-110"
+                    : "text-white hover:text-gray-200 hover:scale-110"
+                }`}
+            >
+              <Icon className="w-6 h-6" />
+              <span className="absolute left-14 opacity-0 group-hover:opacity-100 bg-white text-[#0E9CD9] text-sm font-medium rounded-md px-2 py-1 shadow-md transition-all duration-300 whitespace-nowrap">
+                {item.label}
+              </span>
+            </NavLink>
+          );
+        })}
       </div>
     </div>
   );

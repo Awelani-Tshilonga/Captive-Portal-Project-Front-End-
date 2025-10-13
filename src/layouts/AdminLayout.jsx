@@ -5,23 +5,36 @@ import Header from "../components/AdminComponents/Header";
 export default function AdminLayout() {
   const location = useLocation();
 
-  // Automatically generate a title from the current route
-  const getTitle = () => {
-    const path = location.pathname.replace("/", "");
-    return path ? path.charAt(0).toUpperCase() + path.slice(1) : "Overview";
+  // 🔹 Clean human-readable titles per route
+  const routeTitles = {
+    "/admin": "Overview",
+    "/admin/billing": "Billing Dashboard",
+    "/admin/users": "User Management",
+    "/admin/plans": "Plans Management",
+    "/admin/reports": "Reports",
+    "/admin/security": "Security Center",
+    "/admin/analytics": "Report Analytics",
+    "/admin/notifications": "Alerts & Notifications",
   };
+
+  // 🔹 Default fallback if path isn't in the map
+  const title = routeTitles[location.pathname] || "Dashboard";
 
   const handleSignOut = () => {
     console.log("Signing out...");
-    // You can clear sessionStorage, redirect to login, etc.
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Header title={getTitle()} onSignOut={handleSignOut} />
-        <main className="flex-1 p-8">
+    <div className="flex bg-gray-50 min-h-screen">
+      {/* Sidebar stays full height relative to content */}
+      <div className="flex-shrink-0 bg-white">
+        <Sidebar />
+      </div>
+
+      {/* Content wrapper handles scroll */}
+      <div className="flex flex-1 flex-col min-h-screen">
+        <Header title={title} onSignOut={handleSignOut} />
+        <main className="flex-1 p-8 overflow-y-auto">
           <Outlet />
         </main>
       </div>
