@@ -6,23 +6,66 @@ import paypalIcon from "../../assets/paypal.png";
 import applePayIcon from "../../assets/apple.png";
 
 export default function PaymentPage() {
+  const [form, setForm] = useState({
+    cardNumber: ["", "", "", ""],
+    cardName: "",
+    expiry: "",
+    cvv: "",
+  });
+  const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
 
-  const handlePayment = () => {
-    setSuccess(true);
+  // Update individual card input
+  const handleCardNumberChange = (index, value) => {
+    const newCardNumber = [...form.cardNumber];
+    newCardNumber[index] = value.replace(/\D/g, ""); // only digits
+    setForm({ ...form, cardNumber: newCardNumber });
   };
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Card number validation (each 4-digit block)
+    if (form.cardNumber.some((num) => num.length !== 4)) {
+      newErrors.cardNumber = "Card number must be 16 digits.";
+    }
+
+    // Cardholder name validation
+    if (!form.cardName.trim()) newErrors.cardName = "Cardholder name is required.";
+    else if (!/^[A-Za-z\s]+$/.test(form.cardName))
+      newErrors.cardName = "Name must contain only letters.";
+
+    // Expiry date MM/YY
+    if (!form.expiry.trim()) newErrors.expiry = "Expiry date is required.";
+    else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(form.expiry))
+      newErrors.expiry = "Use MM/YY format.";
+
+    // CVV 3 digits
+    if (!form.cvv.trim()) newErrors.cvv = "CVV is required.";
+    else if (!/^\d{3}$/.test(form.cvv)) newErrors.cvv = "CVV must be 3 digits.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handlePayment = () => {
+    if (validateForm()) setSuccess(true);
+  };
+
+  const getBorderClass = (field) =>
+    errors[field]
+      ? "border-red-500 focus:ring-red-400"
+      : "border-green-400 focus:ring-green-400";
 
   if (success) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white p-6">
-        <img
-          src={logo}
-          alt="ULWEMBU Connect"
-          className="h-24 w-24 object-contain mb-6"
-        />
-        <h1 className="text-3xl font-bold text-green-600 mb-4">
-          Payment Successful 
-        </h1>
+        <img src={logo} alt="ULWEMBU Connect" className="h-24 w-24 object-contain mb-6" />
+        <h1 className="text-3xl font-bold text-green-600 mb-4">Payment Successful</h1>
         <p className="text-lg text-gray-700">Thank you for your purchase!</p>
       </div>
     );
@@ -30,9 +73,7 @@ export default function PaymentPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-white p-6">
-      {/* Card */}
       <div className="max-w-sm w-full overflow-hidden shadow-md border border-green-400 rounded-xl">
-        {/* Card Header with gradient */}
         <div className="bg-gradient-to-r from-blue-500 to-green-400 p-6 flex flex-col items-center rounded-t-xl">
           <img
             src={logo}
@@ -42,9 +83,7 @@ export default function PaymentPage() {
           <h1 className="text-white text-xl font-bold">Payment Details</h1>
         </div>
 
-        {/* White Card Body overlapping the header with rounded top-right corner */}
         <div className="bg-white p-6 -mt-4 rounded-tr-3xl relative z-10">
-          {/* Payment Methods */}
           <div className="grid grid-cols-2 gap-3 mb-6">
             <button className="flex items-center justify-center bg-gradient-to-r from-blue-500 to-green-400 text-white rounded-lg py-2 hover:opacity-90 transition">
               <img src={googlePayIcon} alt="Google Pay" className="h-5 w-5 mr-2" />
@@ -64,7 +103,6 @@ export default function PaymentPage() {
             </button>
           </div>
 
-          {/* Divider */}
           <div className="flex items-center mb-4">
             <hr className="flex-grow border-gray-300" />
             <span className="mx-2 text-gray-500 text-sm">Or</span>
@@ -74,58 +112,67 @@ export default function PaymentPage() {
           {/* Card Form */}
           <form className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Card Number *
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Card Number *</label>
               <div className="grid grid-cols-4 gap-2">
-                <input type="text" maxLength="4" className="border border-green-400 rounded-lg p-2 text-center outline-none focus:ring-2 focus:ring-green-400" />
-                <input type="text" maxLength="4" className="border border-green-400 rounded-lg p-2 text-center outline-none focus:ring-2 focus:ring-green-400" />
-                <input type="text" maxLength="4" className="border border-green-400 rounded-lg p-2 text-center outline-none focus:ring-2 focus:ring-green-400" />
-                <input type="text" maxLength="4" className="border border-green-400 rounded-lg p-2 text-center outline-none focus:ring-2 focus:ring-green-400" />
+                {form.cardNumber.map((num, i) => (
+                  <input
+                    key={i}
+                    type="text"
+                    maxLength="4"
+                    value={num}
+                    onChange={(e) => handleCardNumberChange(i, e.target.value)}
+                    className={`border rounded-lg p-2 text-center outline-none focus:ring-2 ${getBorderClass("cardNumber")}`}
+                  />
+                ))}
               </div>
+              {errors.cardNumber && <p className="text-red-500 text-xs mt-1">{errors.cardNumber}</p>}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Card Holder Name *
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Card Holder Name *</label>
               <input
                 type="text"
-                className="w-full border border-green-400 rounded-lg p-2 outline-none focus:ring-2 focus:ring-green-400"
+                name="cardName"
+                value={form.cardName}
+                onChange={handleChange}
+                className={`w-full border rounded-lg p-2 outline-none focus:ring-2 ${getBorderClass("cardName")}`}
               />
+              {errors.cardName && <p className="text-red-500 text-xs mt-1">{errors.cardName}</p>}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Expiry Date *
-                </label>
+                <label className="block text-sm font-medium text-gray-700">Expiry Date *</label>
                 <input
                   type="text"
                   placeholder="MM/YY"
-                  className="w-full border border-green-400 rounded-lg p-2 outline-none focus:ring-2 focus:ring-green-400"
+                  name="expiry"
+                  value={form.expiry}
+                  onChange={handleChange}
+                  className={`w-full border rounded-lg p-2 outline-none focus:ring-2 ${getBorderClass("expiry")}`}
                 />
+                {errors.expiry && <p className="text-red-500 text-xs mt-1">{errors.expiry}</p>}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  CVV *
-                </label>
+                <label className="block text-sm font-medium text-gray-700">CVV *</label>
                 <input
                   type="password"
                   maxLength="3"
-                  className="w-full border border-green-400 rounded-lg p-2 outline-none focus:ring-2 focus:ring-green-400"
+                  name="cvv"
+                  value={form.cvv}
+                  onChange={handleChange}
+                  className={`w-full border rounded-lg p-2 outline-none focus:ring-2 ${getBorderClass("cvv")}`}
                 />
+                {errors.cvv && <p className="text-red-500 text-xs mt-1">{errors.cvv}</p>}
               </div>
             </div>
           </form>
 
-          {/* Total */}
           <div className="flex justify-between items-center mt-6 text-gray-700 font-medium">
             <span>Total Amount :</span>
             <span>R 79</span>
           </div>
 
-          {/* Pay Button */}
           <button
             onClick={handlePayment}
             className="w-full mt-4 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold shadow-md transition"
