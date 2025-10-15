@@ -1,16 +1,70 @@
 import React, { useState } from "react";
-import logo from "../../assets/ulwembu connect logo.jpeg"; // your logo
+import logo from "../../assets/ulwembu connect logo.jpeg";
 import citywifi from "../../assets/citywifi.png";
 import { useNavigate } from "react-router-dom";
 
 export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState("card");
-  const navigate = useNavigate(); // ✅ useNavigate hook
+  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    cardNumber: "",
+    expiry: "",
+    cvc: "",
+    name: "",
+    address: "",
+    apt: "",
+    city: "",
+    state: "",
+    country: "",
+  });
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setErrors({ ...errors, [name]: "" });
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.cardNumber.trim()) newErrors.cardNumber = true;
+    else if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s/g, "")))
+      newErrors.cardNumber = true;
+
+    if (!formData.expiry.trim()) newErrors.expiry = true;
+    else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiry))
+      newErrors.expiry = true;
+
+    if (!formData.cvc.trim()) newErrors.cvc = true;
+    else if (!/^\d{3,4}$/.test(formData.cvc)) newErrors.cvc = true;
+
+    if (!formData.name.trim() || /[0-9]/.test(formData.name))
+      newErrors.name = true;
+
+    if (!formData.address.trim()) newErrors.address = true;
+    if (!formData.city.trim() || /[0-9]/.test(formData.city))
+      newErrors.city = true;
+    if (!formData.state.trim() || /[0-9]/.test(formData.state))
+      newErrors.state = true;
+    if (!formData.country.trim()) newErrors.country = true;
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handlePay = (e) => {
-    e.preventDefault(); // prevent form submission
-    navigate("/PaymentSuccess"); // ✅ navigate to PaymentSuccess page
+    e.preventDefault();
+    if (validate()) {
+      navigate("/PaymentSuccess");
+    }
   };
+
+  // Conditional border class
+  const borderClass = (field) =>
+    errors[field]
+      ? "border-red-500 focus:ring-red-400"
+      : "border-gray-300 focus:ring-blue-500";
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-gradient-to-r from-blue-500 to-green-400">
@@ -24,7 +78,6 @@ export default function CheckoutPage() {
           />
         </div>
 
-        {/* citywifi image visible only on large screens */}
         <div className="hidden md:flex justify-center mt-auto">
           <img
             src={citywifi}
@@ -33,7 +86,6 @@ export default function CheckoutPage() {
           />
         </div>
 
-        {/* citywifi image visible only on small screens */}
         <div className="flex justify-center">
           <img
             src={citywifi}
@@ -70,51 +122,96 @@ export default function CheckoutPage() {
           <div className="flex gap-3">
             <input
               type="text"
+              name="cardNumber"
               placeholder="0000 0000 0000 0000"
-              className="flex-1 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+              value={formData.cardNumber}
+              onChange={handleChange}
+              className={`flex-1 border rounded-lg p-3 focus:ring-2 outline-none ${borderClass(
+                "cardNumber"
+              )}`}
             />
             <input
               type="text"
+              name="expiry"
               placeholder="MM/YY"
-              className="w-24 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+              value={formData.expiry}
+              onChange={handleChange}
+              className={`w-24 border rounded-lg p-3 focus:ring-2 outline-none ${borderClass(
+                "expiry"
+              )}`}
             />
             <input
               type="text"
+              name="cvc"
               placeholder="CVC"
-              className="w-20 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+              value={formData.cvc}
+              onChange={handleChange}
+              className={`w-20 border rounded-lg p-3 focus:ring-2 outline-none ${borderClass(
+                "cvc"
+              )}`}
             />
           </div>
 
           <input
             type="text"
+            name="name"
             placeholder="Name on card"
-            className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+            value={formData.name}
+            onChange={handleChange}
+            className={`w-full border rounded-lg p-3 focus:ring-2 outline-none ${borderClass(
+              "name"
+            )}`}
           />
           <input
             type="text"
+            name="address"
             placeholder="Street address or P.O box"
-            className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+            value={formData.address}
+            onChange={handleChange}
+            className={`w-full border rounded-lg p-3 focus:ring-2 outline-none ${borderClass(
+              "address"
+            )}`}
           />
           <input
             type="text"
+            name="apt"
             placeholder="Apt., suite, unit, building (Optional)"
+            value={formData.apt}
+            onChange={handleChange}
             className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
           />
 
           <div className="flex gap-3">
             <input
               type="text"
+              name="city"
               placeholder="City"
-              className="flex-1 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+              value={formData.city}
+              onChange={handleChange}
+              className={`flex-1 border rounded-lg p-3 focus:ring-2 outline-none ${borderClass(
+                "city"
+              )}`}
             />
             <input
               type="text"
+              name="state"
               placeholder="State, province, region"
-              className="flex-1 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+              value={formData.state}
+              onChange={handleChange}
+              className={`flex-1 border rounded-lg p-3 focus:ring-2 outline-none ${borderClass(
+                "state"
+              )}`}
             />
           </div>
 
-          <select className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none">
+          <select
+            name="country"
+            value={formData.country}
+            onChange={handleChange}
+            className={`w-full border rounded-lg p-3 focus:ring-2 outline-none ${borderClass(
+              "country"
+            )}`}
+          >
             <option value="">Select country</option>
             <option>United States</option>
             <option>United Kingdom</option>
